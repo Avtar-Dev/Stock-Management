@@ -1,76 +1,61 @@
-// import { MongoClient, ServerApiVersion } from "mongodb";
-// import { NextResponse } from "next/server";
-
-// export async function GET(request) {
-//   const url =
-//     "mongodb+srv://avtar92749:avtar92749@cluster0.w6oq7zn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-//   try {
-//     const client = await connect();
-//     const db = client.db("stock");
-//     const inventory = db.collection("inventory");
-
-//     const allProducts = await inventory.find({}).toArray();
-
-//     return NextResponse.json({ allProducts });
-//   } catch (error) {
-//     console.error("Mongo error:", error);
-//     return NextResponse.json({ success: false, error: error.message });
-//   }
-// }
-
-// export async function POST(request) {
-//   let body = await request.json();
-//   const url =
-//     "mongodb+srv://avtar92749:avtar92749@cluster0.w6oq7zn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-//   const client = new MongoClient(url);
-//   try {
-//     // await client.connect();
-
-//     const database = client.db("stock"); // your database name
-//     const inventory = database.collection("inventory"); // your collection name
-
-//     const product = await inventory.insertOne(body); // fetch all data
-
-//     return NextResponse.json({ product, ok: true });
-//   } catch (error) {
-//     console.error("Mongo error:", error);
-//     return NextResponse.json({ ok: false, error: error.message });
-//   }
-// }
-
-import clientPromise from "@/lib/mongo";
+import { MONGO_URI } from "@/lib/mongo";
+import { MongoClient, ServerApiVersion } from "mongodb";
 import { NextResponse } from "next/server";
 
-export async function GET(request) {
+export async function POST(request) {
+  const uri = MONGO_URI;
+  console.log("MONGO_URI:", uri);
+
+  const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    },
+  });
+
   try {
-    const client = await clientPromise;
+    const body = await request.json();
+    console.log("Received body:", body);
+
+    await client.connect();
+    console.log("Connected to MongoDB");
+
     const db = client.db("stock");
     const inventory = db.collection("inventory");
 
-    const allProducts = await inventory.find({}).toArray();
+    const product = await inventory.insertOne(body);
+    console.log("Product inserted:", product);
 
-    return NextResponse.json({ success: true, allProducts });
+    return NextResponse.json({ success: true, product });
   } catch (error) {
-    console.error("Mongo GET error:", error);
-    return NextResponse.json({ success: false, error: error.message });
+    console.error("MongoDB Error:", error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(request) {
+export async function GET() {
+  // const client = new MongoClient(uri);
   try {
-    const body = await request.json();
-    const client = await clientPromise;
+    console.log("zzz");
 
     const db = client.db("stock");
     const inventory = db.collection("inventory");
+    const query = {};
+    const allProducts = await inventory.find(query).toArray();
+    console.log("abc", allProducts);
 
-    const result = await inventory.insertOne(body);
-
-    return NextResponse.json({ ok: true, product: result });
+    return NextResponse.json({ success: true, products: allProducts });
   } catch (error) {
-    console.error("Mongo POST error:", error);
-    return NextResponse.json({ ok: false, error: error.message });
+    console.error("MongoDB Error:", error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  } finally {
+    await client.close();
   }
 }
