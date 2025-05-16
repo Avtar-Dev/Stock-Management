@@ -1,6 +1,14 @@
-import React from "react";
+"use client";
+
+import { useProductContext } from "@/app/context/ProductContext";
 
 const Search = () => {
+  const { setSearch, setOption } = useProductContext();
+
+  const SearchHandle = (e) => {
+    setSearch(e.target.value);
+  };
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-4 pb-2 w-fit ">Search Product</h1>
@@ -8,14 +16,17 @@ const Search = () => {
         <input
           type="text"
           placeholder="Search product..."
-          className="border border-gray-300 rounded px-4 py-2 w-full "
+          className="border border-gray-300 rounded px-4 py-2 w-full"
+          onChange={SearchHandle}
         />
-        <select className="border border-gray-300 rounded px-4 py-2  ">
-          <option value="">Filter by Category</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Clothing">Clothing</option>
-          <option value="Appliances">Appliances</option>
-          <option value="Furniture">Furniture</option>
+        <select
+          className="border border-gray-300 rounded px-4 py-2"
+          onChange={(e) => setOption(e.target.value)}>
+          <option value="name">Filter by Name</option>
+          <option value="price">Filter by Price</option>
+          <option value="quantity">Filter by Quantity</option>
+          <option value="company">Filter by Company</option>
+          <option value="category">Filter by Category</option>
         </select>
       </div>
     </div>
