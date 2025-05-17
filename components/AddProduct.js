@@ -4,30 +4,75 @@ import { useProductContext } from "@/app/context/ProductContext";
 import { useEffect } from "react";
 
 const AddProduct = () => {
-  const { productForm, setProductForm, setProducts, fetchProducts } =
-    useProductContext();
+  const {
+    productForm,
+    setProductForm,
+    setProducts,
+    editClick,
+    setEditClick,
+    editId,
+    setEditId,
+  } = useProductContext();
+
+  const fetchProducts = async () => {
+    const response = await fetch("/api/product");
+    let result = await response.json();
+    setProducts(result.products);
+  };
+
+  const EditProduct = async (id) => {
+    console.log("productform", productForm);
+
+    await fetch(`/api/product?id=${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        category: productForm.category,
+        company: productForm.company,
+        name: productForm.name,
+        price: productForm.price,
+        quantity: productForm.quantity,
+      }),
+    });
+  };
 
   const AddProducts = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("/api/product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productForm),
-      });
-      const result = await response.json();
-      setProductForm({});
+    // If editing, call PUT and return
+    if (editClick) {
+      await EditProduct(editId);
       fetchProducts();
-      if (response.ok) {
-        alert("Product added Successfully");
+      setEditClick(false); // Reset edit mode
+      setEditId(""); // Clear editId
+      setProductForm({}); // Clear form
+      alert("Product updated successfully");
+      return;
+    } else {
+      // Otherwise, add new product with POST
+      try {
+        const response = await fetch("/api/product", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productForm),
+        });
+
+        if (response.ok) {
+          alert("Product added successfully");
+          setProductForm({});
+          fetchProducts();
+        } else {
+          const result = await response.json();
+          console.error("POST failed:", result);
+        }
+      } catch (error) {
+        console.error("Error adding product:", error);
       }
-    } catch (error) {
-      console.error("Error adding product:", error);
     }
   };
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -86,7 +131,7 @@ const AddProduct = () => {
           <button
             className="bg-indigo-600 hover:bg-green-500 text-white px-6 py-2 rounded cursor-pointer"
             onClick={AddProducts}>
-            Add Product
+            {!editClick ? "Add Product" : "Edit Product"}
           </button>
         </div>
       </div>

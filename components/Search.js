@@ -3,7 +3,7 @@
 import { useProductContext } from "@/app/context/ProductContext";
 
 const Search = () => {
-  const { setSearch, setOption } = useProductContext();
+  const { setSearch, setOption, option } = useProductContext();
 
   const SearchHandle = (e) => {
     setSearch(e.target.value);
@@ -22,6 +22,7 @@ const Search = () => {
         <select
           className="border border-gray-300 rounded px-4 py-2"
           onChange={(e) => setOption(e.target.value)}>
+          <option value="all">All Products</option>
           <option value="name">Filter by Name</option>
           <option value="price">Filter by Price</option>
           <option value="quantity">Filter by Quantity</option>
