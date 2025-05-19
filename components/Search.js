@@ -11,7 +11,9 @@ const Search = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-4 pb-2 w-fit ">Search Product</h1>
+      <h1 className="text-3xl font-bold mb-4 pb-2 w-fit mx-auto sm:mx-0">
+        Search Product
+      </h1>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
         <input
           type="text"

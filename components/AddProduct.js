@@ -21,8 +21,6 @@ const AddProduct = () => {
   };
 
   const EditProduct = async (id) => {
-    console.log("productform", productForm);
-
     await fetch(`/api/product?id=${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -38,7 +36,13 @@ const AddProduct = () => {
 
   const AddProducts = async (e) => {
     e.preventDefault();
+    const { name, price, quantity, company, category } = productForm;
+    console.log("name", name);
 
+    if (!name || !price || !quantity || !company || !category) {
+      alert("All fields are required.");
+      return;
+    }
     // If editing, call PUT and return
     if (editClick) {
       await EditProduct(editId);
@@ -81,8 +85,10 @@ const AddProduct = () => {
     setProductForm({ ...productForm, [e.target.name]: e.target.value });
   };
   return (
-    <div>
-      <h1 className="text-3xl font-bold mt-12 mb-4 pb-2 w-fit ">Add Product</h1>
+    <div className="">
+      <h1 className="text-3xl font-bold mt-12 mb-4 pb-2 w-fit mx-auto sm:mx-0">
+        Add Product
+      </h1>
       <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200 mb-10 max-w-full">
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
           <input
@@ -92,6 +98,7 @@ const AddProduct = () => {
             onChange={handleChange}
             name="name"
             value={productForm.name || ""}
+            required
           />
           <input
             type="number"
@@ -100,6 +107,7 @@ const AddProduct = () => {
             onChange={handleChange}
             name="price"
             value={productForm.price || ""}
+            required
           />
           <input
             type="number"
@@ -108,6 +116,7 @@ const AddProduct = () => {
             onChange={handleChange}
             name="quantity"
             value={productForm.quantity || ""}
+            required
           />
           <input
             type="text"
@@ -116,6 +125,7 @@ const AddProduct = () => {
             onChange={handleChange}
             name="company"
             value={productForm.company || ""}
+            required
           />
           <input
             type="text"
@@ -124,6 +134,7 @@ const AddProduct = () => {
             onChange={handleChange}
             name="category"
             value={productForm.category || ""}
+            required
           />
         </div>
 
