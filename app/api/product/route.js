@@ -118,3 +118,7 @@ export async function PUT(req) {
     await client.close();
   }
 }
+
+// candles problem:- euraud, eurjpy,eursek,gbpaud,gbpjpy,nzdchf,nzdcad,nzdjpy,usddkk,usdzar,audjpy,audnzd,cadchf,chfjpy,eurcad,ukoil,nzdcad,xngusd,usoil,aus200,us500,uk100,us30,
+// no data found:- eurnzd, gbpcad,usdnok,solusd,xmrusd,atomusd,vetusd,dashusd,dotusd,eosusd,etcusd,filusd,neousd,trxusd,xlmusd,xtzusd,es.h25,ax.h25,Yuji_Mai.h25,cl.g25,ng.g25,cl.h25,br.h25
+// chart not showing:- bchusd,linkusd,dogeusd,ustec,jp225
