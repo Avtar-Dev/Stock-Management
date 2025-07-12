@@ -1,5 +1,5 @@
 import { MONGO_URI } from "@/lib/mongo";
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient } from "mongodb";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 

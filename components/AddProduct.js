@@ -43,17 +43,16 @@ const AddProduct = () => {
       alert("All fields are required.");
       return;
     }
-    // If editing, call PUT and return
+
     if (editClick) {
       await EditProduct(editId);
       fetchProducts();
-      setEditClick(false); // Reset edit mode
-      setEditId(""); // Clear editId
-      setProductForm({}); // Clear form
+      setEditClick(false);
+      setEditId("");
+      setProductForm({});
       alert("Product updated successfully");
       return;
     } else {
-      // Otherwise, add new product with POST
       try {
         const response = await fetch("/api/product", {
           method: "POST",

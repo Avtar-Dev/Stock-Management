@@ -42,6 +42,16 @@ const DisplayProduct = () => {
     }
   };
 
+  const filterAll = products?.filter((item) => {
+    const searchText = search.toLowerCase();
+    return (
+      item.name?.toString().toLowerCase().includes(searchText) ||
+      item.price?.toString().includes(searchText) ||
+      item.quantity?.toString().includes(searchText) ||
+      item.company?.toString().toLowerCase().includes(searchText) ||
+      item.category?.toString().toLowerCase().includes(searchText)
+    );
+  });
   const filterByName = products?.filter((items) =>
     items?.name?.toString().toLowerCase().includes(search?.toLowerCase())
   );
@@ -60,7 +70,9 @@ const DisplayProduct = () => {
 
   let filter = [];
 
-  if (option === "name") {
+  if (option === "all") {
+    filter = filterAll;
+  } else if (option === "name") {
     filter = filterByName;
   } else if (option === "price") {
     filter = filterByPrice;
